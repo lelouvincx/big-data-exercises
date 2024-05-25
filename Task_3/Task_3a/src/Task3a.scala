@@ -23,9 +23,15 @@ object Main {
       as[VocabWord]
 
     // TODO: *** Put your solution here ***
+    val joinedData = docwords.join(vocab, "vocabId")
+    val wordCounts = joinedData.groupBy("word").agg(sum("count").alias("total_count"))
+    val sortedWordCounts = wordCounts.orderBy("word")
 
+    sortedWordCounts.write
+      .option("header", "true")
+      .csv("Task_3a-out")
 
-
+    sortedWordCounts.show()
   }
 
   // Do not edit the main function
