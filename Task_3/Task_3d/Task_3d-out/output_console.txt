@@ -1,0 +1,15 @@
+# command: ./build_and_run.sh car truck
+# output:
+24/05/25 20:11:22 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Query words:
+car
+truck
++-----+-----+
+| word|docId|
++-----+-----+
+|  car|    2|
+|truck|    3|
++-----+-----+
+
+[car, 2]
+[truck, 3]

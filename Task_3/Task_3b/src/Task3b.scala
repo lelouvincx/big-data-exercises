@@ -23,9 +23,15 @@ object Main {
       as[VocabWord]
     val docwordIndexFilename = "Assignment_Data/docword_index.parquet"
     // TODO: *** Put your solution here ***
+    val joinedData = docwords.join(vocab, "vocabId")
+    val firstLetterUDF = udf((word: String) => word.substring(0, 1))
+    val dataWithFirstLetter = joinedData.withColumn("firstLetter", firstLetterUDF($"word"))
 
+    dataWithFirstLetter.write
+      .partitionBy("firstLetter")
+      .parquet(docwordIndexFilename)
 
-
+    dataWithFirstLetter.show(10)
   }
 
   // Do not edit the main function

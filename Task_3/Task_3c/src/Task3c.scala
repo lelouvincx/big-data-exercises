@@ -14,7 +14,22 @@ object Main {
     val docwordIndexFilename = "Assignment_Data/docword_index.parquet"
    
     // TODO: *** Put your solution here ***
+    val df = spark.read.parquet(docwordIndexFilename)
+    val filteredDF = df.filter($"docId".isin(docIds.map(_.toInt): _*))
+    val windowSpec = Window.partitionBy("docId").orderBy($"count".desc)
 
+    val resultDF = filteredDF.withColumn("rank", rank().over(windowSpec))
+      .filter($"rank" === 1)
+      .select("docId", "word", "count")
+
+    resultDF.show()
+
+    resultDF.collect().foreach(row => {
+      val docId = row.getAs[Int]("docId")
+      val word = row.getAs[String]("word")
+      val count = row.getAs[Int]("count")
+      println(s"[$docId, $word, $count]")
+    })
   }
 
   // Do not edit the main function

@@ -1,0 +1,15 @@
+# command: bash build_and_run.sh 2 3
+# result:
+Query words:
+2
+3
++-----+---------+-----+
+|docId|     word|count|
++-----+---------+-----+
+|    2|motorbike|  702|
+|    3|     boat| 2000|
++-----+---------+-----+
+
+[2, motorbike, 702]
+[3, boat, 2000]
+
