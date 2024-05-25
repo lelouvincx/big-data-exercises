@@ -18,9 +18,33 @@ object Main {
     val frequentDocwordsFilename = "Assignment_Data/frequent_docwords.parquet"
 
     // TODO: *** Put your solution here ***
+    val outputCSV = "Task_4b-out"
+    val frequentDocwords = spark.read.parquet(frequentDocwordsFilename)
 
+    val pairs = frequentDocwords.as("df1").join(frequentDocwords.as("df2"), $"df1.docId" === $"df2.docId" && $"df1.vocabId" < $"df2.vocabId")
+      .select($"df1.docId", $"df1.vocabId".alias("vocabId1"), $"df2.vocabId".alias("vocabId2"))
 
+    val pairCounts = pairs.groupBy("vocabId1", "vocabId2").agg(countDistinct("docId").alias("docCount"))
 
+    val pairsWithWords = pairCounts
+      .join(vocab.as("v1"), $"vocabId1" === $"v1.vocabId")
+      .join(vocab.as("v2"), $"vocabId2" === $"v2.vocabId")
+      .select($"v1.word".alias("word1"), $"v2.word".alias("word2"), $"docCount")
+
+    val orderedPairs = pairsWithWords.orderBy($"docCount".desc, $"word1", $"word2")
+
+    orderedPairs.write
+      .option("header", "false")
+      .csv(outputCSV)
+
+    orderedPairs.show()
+
+    orderedPairs.collect().foreach(row => {
+      val word1 = row.getAs[String]("word1")
+      val word2 = row.getAs[String]("word2")
+      val docCount = row.getAs[Long]("docCount")
+      println(s"$word1, $word2, $docCount")
+    })
   }
 
   // Do not edit the main function

@@ -23,14 +23,14 @@ object Main {
       csv("Assignment_Data/vocab-small.txt").
       as[VocabWord]
     
-    val frequentDocwordsFilename = "../frequent_docwords.parquet"
+    val frequentDocwordsFilename = "Assignment_Data/frequent_docwords.parquet"
     val outputCSV = "Task_4a-out"
 
     val joinedData = docwords.join(vocab, "vocabId")
     val wordCounts = joinedData.groupBy("word").agg(sum("count").alias("total_count"))
     val frequentWords = wordCounts.filter($"total_count" >= 1000).select("word")
 
-    val frequentDocwords = joinedData.join(frequentWords, "word").select("docId", "vocabId", "count")
+    val frequentDocwords = joinedData.join(frequentWords, "word").select("vocabId", "docId", "count")
 
     frequentDocwords.write.parquet(frequentDocwordsFilename)
 
