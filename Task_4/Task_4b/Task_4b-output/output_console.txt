@@ -1,0 +1,12 @@
+24/05/26 03:37:03 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
++---------+---------+--------+
+|    word1|    word2|docCount|
++---------+---------+--------+
+|motorbike|     boat|       2|
+|    plane|motorbike|       2|
+|    plane|     boat|       1|
++---------+---------+--------+
+
+motorbike, boat, 2
+plane, motorbike, 2
+plane, boat, 1
